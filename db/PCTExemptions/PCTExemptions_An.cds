@@ -20,8 +20,8 @@ annotate PCTExemptions with {
     assignedEngineer   @title: '{i18n>assignedEngineer}'; //•	Assigned Performance Engineer
     to_ProposedAction  @title: '{i18n>ProposedAction}';
 
-    @Core.MediaType
-    Attachments        @title: '{i18n>Attachments}';
+    // @Core.MediaType
+    // Attachments        @title: '{i18n>Attachments}';
 
 }
 
@@ -29,6 +29,9 @@ annotate PCTExemptions with {
     to_Status          @Common.Text: to_Status.name          @Common.TextArrangement: #TextOnly;
     to_ProposedAction  @Common.Text: to_ProposedAction.name  @Common.TextArrangement: #TextOnly;
     to_PurchaseOrderNo @Common.Text: to_PurchaseOrderNo.PurchaseOrderNo  @Common.TextArrangement: #TextOnly;
+
+    to_Status @Common.ValueListWithFixedValues;
+    to_ProposedAction @Common.ValueListWithFixedValues;
 };
 
 annotate PurchaseOrder with {
@@ -38,3 +41,4 @@ annotate PurchaseOrder with {
     companyCode     @title: '{i18n>CompanyCode}';
     plant           @title: '{i18n>Plant}';
 }
+

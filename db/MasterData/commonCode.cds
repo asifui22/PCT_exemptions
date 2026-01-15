@@ -12,7 +12,11 @@ type StatusEnum  : String enum {
 } default 'OPEN';
 
 entity Status : CodeList {
-    key code : StatusEnum;
+    key code        : StatusEnum @UI.Hidden;
+        criticality : Integer; // 1= Red, 2= Yellow, 3= Green,
+        readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
+        editAble    : Boolean;
+        deleteAble  : Boolean;
 }
 
 type PropActEnum : String enum {
@@ -21,6 +25,7 @@ type PropActEnum : String enum {
     NA = 'No change-Request not accepted.'
 
 };
+
 entity ProposedAction : CodeList {
-    key code: PropActEnum;    
+    key code : PropActEnum @UI.Hidden;
 }

@@ -12,7 +12,7 @@ using {
 
 entity PCTExemptions : cuid, managed {
 
-    requestNo          : String(10);
+    requestNo          : String(10) @Core.Computed @assert.unique;
     title              : String(40);
     to_PRNumber        : String(10);
     pRLastApprovalDate : Date;
@@ -24,8 +24,8 @@ entity PCTExemptions : cuid, managed {
     assignedEngineer   : String(50); //•	Assigned Performance Engineer
     to_ProposedAction  : Association to ProposedAction;
 
-    @Core.MediaType
-    Attachments        : LargeBinary;
+    // @Core.MediaType
+    // Attachments        : LargeBinary;
 
 }
 

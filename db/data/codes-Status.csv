@@ -1,0 +1,6 @@
+code,name,descr
+ OPEN ,Open,Open
+    PENDIND ,Pending,Pending
+    ACCEPTED ,Apprved,Apprved
+    RETURNED ,Returned,Returned
+    CANCELLED ,Cancelled,Cancelled
