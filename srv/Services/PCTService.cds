@@ -7,7 +7,11 @@ using {  db.pct as pct } from '../../db/PCTExemptions/PCTExemptions';
 service PCTService {
     annotate PCTExemptions with @odata.draft.enabled ;
     
-entity PCTExemptions as projection on pct.PCTExemptions ;
+entity PCTExemptions as projection on pct.PCTExemptions actions {
+   action submit();
+};
+annotate PurchaseOrder with @odata.draft.enabled ;
+entity PurchaseOrder as projection on pct.PurchaseOrder;
 
     
 

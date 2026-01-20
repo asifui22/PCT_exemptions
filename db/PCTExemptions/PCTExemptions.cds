@@ -12,7 +12,7 @@ using {
 
 entity PCTExemptions : cuid, managed {
 
-    requestNo          : String(10) @Core.Computed @assert.unique;
+    requestNo          : String(10)   @Core.Computed             @assert.unique;
     title              : String(40);
     to_PRNumber        : String(10);
     pRLastApprovalDate : Date;
@@ -25,14 +25,16 @@ entity PCTExemptions : cuid, managed {
     to_ProposedAction  : Association to ProposedAction;
 
     // @Core.MediaType
-    // Attachments        : LargeBinary;
+    Attachments        : LargeBinary  @Core.MediaType: fileName  @Core.ContentDisposition.Type: 'inline';
+    fileName           : String       @Core.IsMediaType;
 
 }
 
 
 entity PurchaseOrder : cuid {
     PurchaseOrderNo : String(10);
-    BusinessPartend : String(10);
+    poDate          : DateTime;
+    BusinessPartner : String(10);
     POStatus        : String;
     companyCode     : String(4);
     plant           : String(10);

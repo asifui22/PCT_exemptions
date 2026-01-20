@@ -63,7 +63,8 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -95,17 +96,36 @@
       "css": []
     },
     "routing": {
-      "config": {},
+      "config": {
+        "flexibleColumnLayout": {
+          "defaultTwoColumnLayoutType": "TwoColumnsMidExpanded",
+          "defaultThreeColumnLayoutType": "ThreeColumnsEndExpanded"
+        },
+        "routerClass": "sap.f.routing.Router"
+      },
       "routes": [
         {
           "pattern": ":?query:",
           "name": "PCTExemptionsList",
-          "target": "PCTExemptionsList"
+          "target": [
+            "PCTExemptionsList"
+          ]
         },
         {
           "pattern": "PCTExemptions({key}):?query:",
           "name": "PCTExemptionsObjectPage",
-          "target": "PCTExemptionsObjectPage"
+          "target": [
+            "PCTExemptionsList",
+            "PCTExemptionsObjectPage"
+          ]
+        },
+        {
+          "name": "PurchaseOrderObjectPage",
+          "pattern": "PurchaseOrder({PurchaseOrderKey}):?query:",
+          "target": [
+            "PCTExemptionsList",
+            "PurchaseOrderObjectPage"
+          ]
         }
       ],
       "targets": {
@@ -122,17 +142,42 @@
                   "detail": {
                     "route": "PCTExemptionsObjectPage"
                   }
+                },
+                "PurchaseOrder": {
+                  "detail": {
+                    "route": "PurchaseOrderObjectPage"
+                  }
                 }
               },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
-                    "type": "ResponsiveTable"
+                    "type": "ResponsiveTable",
+                    "condensedTableLayout": true,
+                    "disableCopyToClipboard": true,
+                    "selectAll": true
                   }
                 }
+              },
+              "initialLoad": "Enabled",
+              "views": {
+                "paths": [
+                  {
+                    "key": "tableView",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView"
+                  },
+                  {
+                    "key": "tableView1",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
+                    "entitySet": "PurchaseOrder"
+                  }
+                ],
+                "showCounts": true
               }
             }
-          }
+          },
+          "controlAggregation": "beginColumnPages",
+          "contextPattern": ""
         },
         "PCTExemptionsObjectPage": {
           "type": "Component",
@@ -141,11 +186,43 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/PCTExemptions"
+              "contextPath": "/PCTExemptions",
+              "content": {
+                "header": {
+                  "anchorBarVisible": true
+                }
+              }
             }
-          }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/PCTExemptions({key})"
+        },
+        "PurchaseOrderObjectPage": {
+          "type": "Component",
+          "id": "PurchaseOrderObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/PurchaseOrder",
+              "content": {
+                "header": {
+                  "anchorBarVisible": true
+                }
+              },
+              "editableHeaderContent": false
+            }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/PurchaseOrder({PurchaseOrderKey})"
         }
       }
+    },
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
     }
   },
   "sap.fiori": {

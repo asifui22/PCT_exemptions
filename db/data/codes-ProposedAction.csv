@@ -1,1 +1,4 @@
 code,name,descr
+ED,Exclude Document from PCT calculation,Exclude Document from PCT calculation
+DJ,Deduct justified delay period,Deduct justified delay period
+NA,No change-Request not accepted,No change-Request not accepted

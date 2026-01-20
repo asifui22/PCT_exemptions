@@ -4,7 +4,7 @@ using {sap.common.CodeList, } from '@sap/cds/common';
 
 type StatusEnum  : String enum {
     OPEN = 'Open';
-    PENDIND = 'Pending';
+    PENDING = 'Pending';
     ACCEPTED = 'Apprved';
     RETURNED = 'Returned';
     CANCELLED = 'Cancelled';
@@ -14,9 +14,9 @@ type StatusEnum  : String enum {
 entity Status : CodeList {
     key code        : StatusEnum @UI.Hidden;
         criticality : Integer; // 1= Red, 2= Yellow, 3= Green,
-        readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
-        editAble    : Boolean;
-        deleteAble  : Boolean;
+        // readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
+        // editAble    : Boolean;
+        // deleteAble  : Boolean;
 }
 
 type PropActEnum : String enum {
