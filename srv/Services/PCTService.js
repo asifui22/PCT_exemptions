@@ -26,11 +26,22 @@ class PCTService extends cds.ApplicationService {
     });
 
     this.before("SAVE", PCTExemptions, async (req) => {
-      if (req.data.to_Status_code == "OPEN") {
+      if (req.data.to_Status_code == "Open") {
         // await UPDATE(req).set({
         //     to_Status_code : "PENDING"
         // })
-        // req.data.to_Status_code = "PENDING";
+        req.data.to_Status_code = "Open";
+        req.data.statusDate = new Date();
+      }
+    });
+
+
+    this.before("UPDATE", PCTExemptions, async (req) => {
+      if (req.data.to_Status_code == "Open") {
+        // await UPDATE(req).set({
+        //     to_Status_code : "PENDING"
+        // })
+        req.data.to_Status_code = "Open";
         req.data.statusDate = new Date();
       }
     });
@@ -47,38 +58,24 @@ class PCTService extends cds.ApplicationService {
       //  Update status
       await UPDATE(PCTExemptions)
         .set({
-          status: "PENDING",
+          to_Status_code: "Pending",
           statusDate: new Date(),
+          isSubmitted: true
         })
         .where({ ID });
 
       //  Notify UI
-      req.notify("Request submitted successfully");
+      req.info("Request submitted successfully");
 
-      return { status: "PENDING" };
+      return { to_Status_code: "Pending" };
     });
 
     async function startWorkflow(req, data) {
-      const cds = require("@sap/cds");
+      // const cds = require("@sap/cds");
 
       //  Connect to Workflow Runtime via destination
       const wf = await cds.connect.to("spa_process_destination");
-      // must match your destination name EXACTLY
-
-      //  Prepare payload
-      // const payload = {
-      //   definitionId: process.env.PCT_WORKFLOW_DEFINITION_ID,
-      //   //  we’ll set this env variable next
-      //   context: {
-      //     requestID: req.data.ID,
-      //     requestNo: req.data.requestNo,
-      //     title: req.data.title,
-      //     // assignedEngineer: data.assignedEngineer || "",
-      //     // status: "PENDING",
-      //     // createdOn: data.createdOn,
-      //     // createdBy: data.createdBy
-      //   },
-      // };
+    
       const definitionId =
         "us10.f330de2atrial.pctexemption1.pCTExemptionProcess";
       const payload = {
@@ -89,14 +86,36 @@ class PCTService extends cds.ApplicationService {
             requestNo: data.requestNo,
             title: data.title,
             assignedEngineer: data.assignedEngineer || "",
-            createdOn: data.createdOn,
+            createdOn: data.createdAt,
+            createdBy: data.createdBy,
+            IsActiveEntity: req.params[0].IsActiveEntity
           },
         },
+
+  
+
       };
 
       //  Call Workflow Runtime API
       await wf.post("/workflow/rest/v1/workflow-instances", payload);
+      console.log('Playload:', payload)
     }
+
+    this.on("response", PCTExemptions, async (req) => {
+      const { ID } = req.params[0];
+      const { to_Status, to_ProposedAction, deductedPeriod, assignedEngineer, approverName } = req.data;
+
+      await UPDATE(PCTExemptions)
+        .set({
+          to_Status_code: to_Status,
+          to_ProposedAction_code: to_ProposedAction,
+          statusDate: new Date(),
+          deductedPeriod: deductedPeriod,
+          assignedEngineer: assignedEngineer,
+          approverName: approverName
+        })
+        .where({ ID });
+    });
 
     return super.init();
   }

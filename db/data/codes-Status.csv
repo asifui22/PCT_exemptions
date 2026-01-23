@@ -1,6 +1,6 @@
 code,name,descr,criticality
-OPEN,Open,Open,0
-PENDING,Pending,Pending,2
-ACCEPTED,Approved,Approved,3
-RETURNED,Returned,Returned,2
-CANCELLED,Cancelled,Cancelled,1
+Open,Open,Open,0
+Pending,Pending,Pending,2
+Approved,Approved,Approved,3
+Rejected,Rejected,Rejected,1
+Cancelled,Cancelled,Cancelled,1

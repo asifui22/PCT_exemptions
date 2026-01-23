@@ -15,14 +15,18 @@ entity PCTExemptions : cuid, managed {
     requestNo          : String(10)   @Core.Computed             @assert.unique;
     title              : String(40);
     to_PRNumber        : String(10);
-    pRLastApprovalDate : Date;
+    pRLastApprovalDate : DateTime;
     RFQNo              : String(10);
     to_PurchaseOrderNo : Association to PurchaseOrder;
     Requestdetails     : String(255);
     to_Status          : Association to Status;
-    statusDate         : Date;
+    statusDate         : DateTime;
     assignedEngineer   : String(50); //•	Assigned Performance Engineer
     to_ProposedAction  : Association to ProposedAction;
+    deductedPeriod     : Integer;
+    isSubmitted        : Boolean default false;
+
+    approverName       : String;
 
     // @Core.MediaType
     Attachments        : LargeBinary  @Core.MediaType: fileName  @Core.ContentDisposition.Type: 'inline';

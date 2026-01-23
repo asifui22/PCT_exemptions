@@ -3,20 +3,20 @@ namespace codes;
 using {sap.common.CodeList, } from '@sap/cds/common';
 
 type StatusEnum  : String enum {
-    OPEN = 'Open';
-    PENDING = 'Pending';
-    ACCEPTED = 'Apprved';
-    RETURNED = 'Returned';
-    CANCELLED = 'Cancelled';
+    Open = 'Open';
+    Pending = 'Pending';
+    Approved = 'Approved';
+    Rejected = 'Rejected';
+    Cancelled = 'Cancelled';
 
-} default 'OPEN';
+} default 'Open';
 
 entity Status : CodeList {
     key code        : StatusEnum @UI.Hidden;
         criticality : Integer; // 1= Red, 2= Yellow, 3= Green,
-        // readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
-        // editAble    : Boolean;
-        // deleteAble  : Boolean;
+// readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
+// editAble    : Boolean;
+// deleteAble  : Boolean;
 }
 
 type PropActEnum : String enum {

@@ -28,6 +28,10 @@ annotate service.PCTExemptions with @(
         },
         {
             $Type : 'UI.DataField',
+            Value : statusDate,
+        },
+        {
+            $Type : 'UI.DataField',
             Value : to_PRNumber,
 
         },
@@ -42,7 +46,13 @@ annotate service.PCTExemptions with @(
         {
             $Type : 'UI.DataFieldForAction',
             Action : 'srv.pct.PCTService.submit',
-            Label : 'submit',
+            Label : '{i18n>Submit}',
+            
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'srv.pct.PCTService.response',
+            Label : 'response',
         },
     ],
     UI.FieldGroup #GeneratedGroup : {
@@ -56,34 +66,34 @@ annotate service.PCTExemptions with @(
                 $Type : 'UI.DataField',
                 Value : title,
             },
-            {
-                $Type : 'UI.DataField',
-                Value : to_Status_code,
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : statusDate,
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : to_ProposedAction_code,
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : assignedEngineer,
-            },
-            // {
-            //     $Type : 'UI.DataField',
-            //     Value : Attachments,
-            // },
+            
         ],
     },
     UI.Facets : [
         {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
+            $Type : 'UI.CollectionFacet',
             Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup',
+            ID : 'GeneralInformation',
+            Facets : [
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    ID : 'GeneratedFacet1',
+                    // Label : 'General Information',
+                    Target : '@UI.FieldGroup#GeneratedGroup',
+                },
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    // Label : '',
+                    ID : 'Status',
+                    Target : '@UI.FieldGroup#Status',
+                },
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    // Label : 'Actions Detail',
+                    ID : 'ActionsDetail',
+                    Target : '@UI.FieldGroup#ActionsDetail',
+                },
+            ],
         },
         {
             $Type : 'UI.ReferenceFacet',
@@ -124,6 +134,10 @@ annotate service.PCTExemptions with @(
                 $Type : 'UI.DataField',
                 Value : RFQNo,
             },
+            // {
+            //     $Type : 'UI.DataField',
+            //     Value : createdAt,
+            // },
         ],
     },
     UI.HeaderInfo : {
@@ -203,12 +217,41 @@ annotate service.PCTExemptions with @(
             {
                 $Type : 'UI.DataField',
                 Value : Attachments,
-                Label : 'Attachments',
             },
             {
                 $Type : 'UI.DataField',
                 Value : fileName,
-                Label : 'fileName',
+            },
+        ],
+    },
+    UI.FieldGroup #Status : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : to_Status_code,
+                Criticality : to_Status.criticality,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : statusDate,
+            },
+        ],
+    },
+    UI.FieldGroup #ActionsDetail : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : to_ProposedAction_code,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : deductedPeriod,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : assignedEngineer,
             },
         ],
     },
@@ -297,11 +340,11 @@ annotate service.PurchaseOrder with @(
         TypeNamePlural : 'Purchase Order',
         Title : {
             $Type : 'UI.DataField',
-            Value : PurchaseOrderNo,
+            Value : PurchaseOrderN,
         },
         Description : {
             $Type : 'UI.DataField',
-            Value : PurchaseOrderNo,
+            Value : PurchseOrderNo,
         },
     },
 );
