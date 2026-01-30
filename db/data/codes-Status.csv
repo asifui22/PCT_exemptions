@@ -1,6 +1,6 @@
-code,name,descr,criticality
-Open,Open,Open,0
-Pending,Pending,Pending,2
-Approved,Approved,Approved,3
-Rejected,Rejected,Rejected,1
-Cancelled,Cancelled,Cancelled,1
+code,name,descr,criticality,readOnly,disAble
+Open,Open,Open,0,0,1
+Pending,Pending,Pending,2,0,0
+Approved,Approved,Approved,3,0,0
+Rejected,Rejected,Rejected,1,0,0
+Cancelled,Cancelled,Cancelled,1,0,0

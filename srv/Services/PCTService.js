@@ -60,7 +60,7 @@ class PCTService extends cds.ApplicationService {
         .set({
           to_Status_code: "Pending",
           statusDate: new Date(),
-          isSubmitted: true
+          isSubmitted: false
         })
         .where({ ID });
 
@@ -91,14 +91,14 @@ class PCTService extends cds.ApplicationService {
             IsActiveEntity: req.params[0].IsActiveEntity
           },
         },
-
-  
-
       };
 
       //  Call Workflow Runtime API
       await wf.post("/workflow/rest/v1/workflow-instances", payload);
-      console.log('Playload:', payload)
+      // const respFromWF = await wf.post("/workflow/rest/v1/workflow-instances", payload);
+      console.log('Playload:', payload);
+      // const workflowInstanceId = respFromWF.id
+
     }
 
     this.on("response", PCTExemptions, async (req) => {

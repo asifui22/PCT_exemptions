@@ -14,7 +14,8 @@ type StatusEnum  : String enum {
 entity Status : CodeList {
     key code        : StatusEnum @UI.Hidden;
         criticality : Integer; // 1= Red, 2= Yellow, 3= Green,
-// readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
+        readOnly    : Integer    @odata.Type: 'Edm.Byte'; // 1: #ReadOnly, 2: Enabled, 7: #Mandatory
+        disable     : Boolean;
 // editAble    : Boolean;
 // deleteAble  : Boolean;
 }

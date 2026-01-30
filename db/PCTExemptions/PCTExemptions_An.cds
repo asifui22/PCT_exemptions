@@ -2,7 +2,9 @@ namespace db.pct;
 
 using {
     db.pct.PCTExemptions,
-    db.pct.PurchaseOrder
+    db.pct.PurchaseOrder,
+    db.pct.PurchaseOrderItem,
+    db.pct.Attachments
 } from './PCTExemptions';
 
 
@@ -24,7 +26,7 @@ annotate PCTExemptions with {
 
     Attachments        @title: '{i18n>Attachments}';
     fileName           @title: '{i18n>FileName}';
-    approverName @title: '{i18n>approverName}';
+    approverName       @title: '{i18n>approverName}';
 
 }
 
@@ -34,7 +36,7 @@ annotate PCTExemptions with {
     to_ProposedAction   @Common.Text: to_ProposedAction.name              @Common.TextArrangement: #TextOnly;
     to_PurchaseOrderNo  @Common.Text: to_PurchaseOrderNo.PurchaseOrderNo  @Common.TextArrangement: #TextOnly;
 
-    to_Status           @Common.ValueListWithFixedValues                  @readonly;
+    to_Status           @Common.ValueListWithFixedValues                ;//  @readonly;
     to_ProposedAction   @Common.ValueListWithFixedValues                  @readonly;
 
     Requestdetails      @UI.MultiLineText;
@@ -55,3 +57,28 @@ annotate PurchaseOrder with {
     companyCode     @title: '{i18n>CompanyCode}'; //later will be change with Business
     plant           @title: '{i18n>Plant}'; //later will be change with Business
 }
+
+
+annotate PurchaseOrderItem with {
+    ID                 @title: '{i18n>UUID}'  @UI.Hidden;
+    to_PurchaseOrderNo @title: '{i18n>PurchaseOrderNo}';
+    poDate             @title: '{i18n>PurchaseOrderDate}';
+    BusinessPartner    @title: '{i18n>BusinessPartner}'; //later will be change with Business
+    POStatus           @title: '{i18n>POStatus}'; //later will be change with Business
+    companyCode        @title: '{i18n>CompanyCode}'; //later will be change with Business
+    plant              @title: '{i18n>Plant}'; //later will be change with Business
+}
+
+
+annotate Attachments with {
+    ID   @title: '{i18n>UUID}'  @UI.Hidden;
+    link @title: '{i18n>DocumentLink}';
+    name @title: '{i18n>DocumentName}';
+
+}
+
+
+annotate PCTExemptions with @(Capabilities.DeleteRestrictions: {
+   
+    Deletable: isSubmitted,
+}, )

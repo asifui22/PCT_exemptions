@@ -13,6 +13,7 @@ service PCTService {
             action submit();
             action response(to_Status: String, to_ProposedAction: String, deductedPeriod: Integer, assignedEngineer: String, 
             approverName: String);
+            action cancelRequest(  ID: UUID);
         };
 
     annotate PurchaseOrder with @odata.draft.enabled;
