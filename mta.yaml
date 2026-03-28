@@ -8,8 +8,8 @@ modules:
     path: gen/srv
     requires:
       - name: PCtExemptions-auth
-      - name: PCtExemptions-db
       - name: PCtExemptions-destination
+      - name: PCtExemptions-db
     provides:
       - name: srv-api
         properties:
@@ -19,13 +19,6 @@ modules:
       instances: 1
     build-parameters:
       builder: npm-ci
-  - name: PCtExemptions-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: PCtExemptions-db
-    parameters:
-      buildpack: nodejs_buildpack
   - name: PCtExemptions-app-deployer
     type: com.sap.application.content
     path: gen
@@ -44,6 +37,26 @@ modules:
             - pctexemptionapp.zip
           name: PCtExemptionspctexemptionapp
           target-path: app/
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            existing_destinations_policy: update
+            destinations:
+              - Name: srv-api
+                URL: ~{srv-api/srv-url}
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                HTML5.ForwardAuthToken: true
+                HTML5.DynamicDestination: true
+
+              - Name: ui5
+                URL: https://ui5.sap.com
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
   - name: PCtExemptionspctexemptionapp
     type: html5
     path: app/pctexemptionapp
@@ -53,6 +66,8 @@ modules:
       commands:
         - npm install
         - npm run build:cf
+        - npm ci
+        - npm run build
       supported-platforms:
         []
   - name: PCtExemptions-destinations
@@ -86,6 +101,38 @@ modules:
           existing_destinations_policy: update
     build-parameters:
       no-source: true
+
+  - name: PCtExemptions-mtx
+    type: nodejs
+    path: gen/mtx/sidecar
+    requires:
+      - name: PCtExemptions-auth
+      - name: PCtExemptions-db
+      - name: PCtExemptions-registry
+      - name: PCtExemptions-destination
+      - name: PCtExemptions-html5-runtime
+      - name: PCtExemptions-html5-repo-host
+    build-parameters:
+      builder: npm-ci
+    parameters:
+      instances: 1
+      memory: 256M
+      disk-quota: 512M
+    hooks:
+      - name: upgrade-all
+        type: task
+        phases:
+          - blue-green.application.before-start.idle
+          - deploy.application.before-start
+        parameters:
+          name: upgrade
+          memory: 512M # increase as required
+          disk-quota: 768M # increase as required
+          command: cds-mtx upgrade '*'
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
 resources:
   - name: PCtExemptions-auth
     type: org.cloudfoundry.managed-service
@@ -95,16 +142,11 @@ resources:
           credential-types:
             - binding-secret
             - x509
-        tenant-mode: dedicated
+        tenant-mode: shared
         xsappname: PCtExemptions-${org}-${space}
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
-  - name: PCtExemptions-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
   - name: PCtExemptions-destination
     type: org.cloudfoundry.managed-service
     parameters:
@@ -126,6 +168,15 @@ resources:
                 Type: HTTP
                 URL: https://ui5.sap.com
             existing_destinations_policy: update
+          subaccount:
+            existing_destinations_policy: update
+            destinations:
+              - Name: PCtExemptions-workzone-runtime
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                URL: https://${org}.launchpad.${default-domain}
+                CEP.HTML5contentprovider: true
       service: destination
       service-plan: lite
     requires:
@@ -135,6 +186,36 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-host
+  - name: PCtExemptions-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: PCtExemptions-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: mtx-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: PCtExemptions-${org}-${space}
+        appName: PCtExemptions-${org}-${space}
+        displayName: PCtExemptions
+        description: A simple CAP project.
+        category: 'Category'
+        appUrls:
+          getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
+          onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that
+  - name: PCtExemptions-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
